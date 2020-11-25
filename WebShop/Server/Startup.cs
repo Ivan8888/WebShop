@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server
 {
@@ -25,15 +27,25 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(b => 
+                    b.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dbcontext)
         {
             if (env.IsDevelopment())
             {
+                dbcontext.Database.EnsureDeleted();
+                dbcontext.Database.EnsureCreated();
+
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                dbcontext.Database.EnsureCreated();
             }
 
             app.UseHttpsRedirection();
