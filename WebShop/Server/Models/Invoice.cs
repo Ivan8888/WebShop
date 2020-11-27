@@ -9,8 +9,8 @@ namespace Server.Models
     {
         public int InvoiceId { get; set; }
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<InvoiceItem> InvoiceItems { get; set; }
+        public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Server.Models
     {
         public int CustomerId { get; set; }
         public string Name { get; set; }
-        public List<Invoice> Invoices { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
     }
 }

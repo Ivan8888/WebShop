@@ -24,9 +24,7 @@ namespace Server.Controllers
         [Route("{id}")]
         public IActionResult GetById(int id)
         {
-            //Product product = _context.Products.SingleOrDefault(p => p.ProductId == id);
-
-            //explicit loading
+            ////explicit loading
             //Invoice invoice_explicit = _context.Invoices.SingleOrDefault(i => i.InvoiceId == id);
             //_context.Entry(invoice_explicit)
             //    .Reference(i => i.Customer)
@@ -35,18 +33,24 @@ namespace Server.Controllers
             //    .Collection(i => i.InvoiceItems)
             //    .Load();
 
+            //return Ok(invoice_explicit);
 
 
-            //eager loading
-            Invoice invoice_eager = _context.Invoices
-                                    .Include(i => i.Customer)
-                                    .Include(i => i.InvoiceItems)
-                                        .ThenInclude(i => i.Product)
-                                    .SingleOrDefault(i => i.InvoiceId == id);
 
-            return Ok(invoice_eager);
+            ////eager loading
+            //Invoice invoice_eager = _context.Invoices
+            //                        .Include(i => i.Customer)
+            //                        .Include(i => i.InvoiceItems)
+            //                            .ThenInclude(i => i.Product)
+            //                        .SingleOrDefault(i => i.InvoiceId == id);
+
+            //return Ok(invoice_eager);
 
             //lazy loading
+            Invoice invoice_lazy = _context.Invoices.SingleOrDefault(i => i.InvoiceId == id);
+            Customer customer = invoice_lazy.Customer;
+
+            return Ok(invoice_lazy);
         }
     }
 }

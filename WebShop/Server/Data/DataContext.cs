@@ -18,6 +18,8 @@ namespace Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Invoice>().ToTable("Racuni");
+
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {

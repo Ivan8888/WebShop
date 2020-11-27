@@ -5,9 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201127111950_description.cs" />
+    <Compile Remove="Migrations\20201127111950_description.Designer.cs" />
+    <Compile Remove="Migrations\20201127112839_AddTestColumn.cs" />
+    <Compile Remove="Migrations\20201127112839_AddTestColumn.Designer.cs" />
+    <Compile Remove="Migrations\20201127120539_desc.cs" />
+    <Compile Remove="Migrations\20201127120539_desc.Designer.cs" />
+    <Compile Remove="Migrations\20201127133556_desc.cs" />
+    <Compile Remove="Migrations\20201127133556_desc.Designer.cs" />
+    <Compile Remove="Migrations\20201127135135_Description.cs" />
+    <Compile Remove="Migrations\20201127135135_Description.Designer.cs" />
+    <Compile Remove="Migrations\20201127141213_Description.cs" />
+    <Compile Remove="Migrations\20201127141213_Description.Designer.cs" />
+    <Compile Remove="Migrations\20201127143259_desc.cs" />
+    <Compile Remove="Migrations\20201127143259_desc.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 
