@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
@@ -21,6 +22,8 @@ namespace Server.Controllers
         }
 
         [Route("{id}")]
+        [Authorize(Policy = "RequireEmail")]
+        //[Authorize]
         public IActionResult GetById(int id)
         {
             Product product = _context.Products.SingleOrDefault(p => p.ProductId == id);

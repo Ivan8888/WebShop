@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Server.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Server.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<AppUser>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
 
@@ -99,6 +100,8 @@ namespace Server.Data
                     Quantity = 3
                 }
             );
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

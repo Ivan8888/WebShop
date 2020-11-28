@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Server.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Server.Models;
+using System.Security.Claims;
 
 namespace Server
 {
@@ -31,18 +34,55 @@ namespace Server
                     b.UseLazyLoadingProxies()
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddIdentity<AppUser, IdentityRole>(options => {
+                options.Password.RequiredLength = 4;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+                options.Lockout.MaxFailedAccessAttempts = 3;
+            })
+                .AddEntityFrameworkStores<DataContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "AuthenticationCookie";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = false;
+
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+
+                options.Events.OnRedirectToAccessDenied = context => {
+                    context.Response.StatusCode = 403;
+                    return Task.CompletedTask;
+                };
+            });
+
+            services.AddAuthorization(o => {
+                o.AddPolicy("RequireEmail", p => p.RequireClaim(ClaimTypes.Email));
+            });
+
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dbcontext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dbcontext, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
                 dbcontext.Database.EnsureDeleted();
                 dbcontext.Database.EnsureCreated();
+                SeedUsersAndRoles.CreateInitialUsers(userManager, roleManager);
 
                 app.UseDeveloperExceptionPage();
             }
@@ -54,6 +94,8 @@ namespace Server
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
